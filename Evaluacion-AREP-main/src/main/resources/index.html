@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <title>Key-Value Store Cliente</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+    <h1>Almacenamiento llave-valor distribuido</h1>
+    <div>
+        <h2>Guardar (setkv)</h2>
+        <label for="setkey">Key:</label>
+        <input type="text" id="setkey" maxlength="100"><br>
+        <label for="setvalue">Value:</label>
+        <input type="text" id="setvalue" maxlength="100"><br>
+        <button onclick="setKV()">Guardar</button>
+        <div id="setrespmsg"></div>
+    </div>
+    <hr>
+    <div>
+        <h2>Consultar (getkv)</h2>
+        <label for="getkey">Key:</label>
+        <input type="text" id="getkey" maxlength="100">
+        <button onclick="getKV()">Consultar</button>
+        <div id="getrespmsg"></div>
+    </div>
+
+    <script>
+        function setKV() {
+            let key = document.getElementById("setkey").value.trim();
+            let value = document.getElementById("setvalue").value.trim();
+            if (!key || !value) {
+                document.getElementById("setrespmsg").innerHTML = "<span style='color:red'>Key y Value son requeridos</span>";
+                return;
+            }
+            const xhttp = new XMLHttpRequest();
+            xhttp.onload = function () {
+                document.getElementById("setrespmsg").innerHTML = `<pre>${this.responseText}</pre>`;
+            }
+            xhttp.open("GET", `/setkv?key=${encodeURIComponent(key)}&value=${encodeURIComponent(value)}`);
+            xhttp.setRequestHeader("Accept", "application/json");
+            xhttp.send();
+        }
+
+        function getKV() {
+            let key = document.getElementById("getkey").value.trim();
+            if (!key) {
+                document.getElementById("getrespmsg").innerHTML = "<span style='color:red'>Key es requerida</span>";
+                return;
+            }
+            const xhttp = new XMLHttpRequest();
+            xhttp.onload = function () {
+                document.getElementById("getrespmsg").innerHTML = `<pre>${this.responseText}</pre>`;
+            }
+            xhttp.open("GET", `/getkv?key=${encodeURIComponent(key)}`);
+            xhttp.setRequestHeader("Accept", "application/json");
+            xhttp.send();
+        }
+    </script>
+
+</body>
+
+</html>
+    
